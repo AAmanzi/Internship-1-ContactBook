@@ -8,7 +8,7 @@ namespace AddressBook
     {
         static void Main(string[] args)
         {
-            var addressBook = new Dictionary<int, Tuple<string, string, string>>(); //Key = number; Value = (Item1 = name, Item2 = lastName, Item3 = address)
+            var addressBook = new Dictionary<string, Tuple<string, string, string>>(); //Key = number; Value = (Item1 = name, Item2 = lastName, Item3 = address)
             var choice = 0;
             do
             {
@@ -33,11 +33,11 @@ namespace AddressBook
                         Console.WriteLine("Address:");
                         var newAddress = (Console.ReadLine());
                         Console.WriteLine("Number:");
-                        var newNumber = int.Parse(Console.ReadLine());
+                        var newNumber = RemoveWhitespace(Console.ReadLine());
                         Console.WriteLine("Confirm your number:");
-                        var confirmNumberAdd = int.Parse(Console.ReadLine());
-
-                        if (confirmNumberAdd == newNumber)
+                        var confirmNumberAdd = RemoveWhitespace(Console.ReadLine());
+                        
+                        if (confirmNumberAdd.Equals(newNumber))
                             addressBook.Add(newNumber, (newName, newLastName, newAddress).ToTuple());
                         else
                             Console.WriteLine("Number hasn't been confirmed!");
@@ -45,12 +45,12 @@ namespace AddressBook
 
                     //edit person properties
                     case 2:
-                        var numberForChange = 0;
+                        var numberForChange = "";
 
                         while(true)
                         {
                             Console.WriteLine("Input the number of the person you want to update:");
-                            numberForChange = int.Parse(Console.ReadLine());
+                            numberForChange = RemoveWhitespace(Console.ReadLine());
                             if (addressBook.ContainsKey(numberForChange))
                                 break;
                             Console.WriteLine("We cannot find the number you have entered in the address book!");
@@ -76,7 +76,8 @@ namespace AddressBook
                                 break;
                             case 3: //change number
                                 Console.WriteLine("Please confirm the number you want to change:");
-                                if (int.Parse(Console.ReadLine()) != numberForChange)
+                                var confirmNumberChange = RemoveWhitespace(Console.ReadLine());
+                                if (!confirmNumberChange.Equals(numberForChange))
                                 {
                                     Console.WriteLine("Number hasn't been confirmed!");
                                     break;
@@ -84,7 +85,7 @@ namespace AddressBook
                                 var temporaryProperties = (addressBook[numberForChange].Item1, addressBook[numberForChange].Item2, addressBook[numberForChange].Item3).ToTuple();
                                 addressBook.Remove(numberForChange);
                                 Console.WriteLine("Enter new number:");
-                                addressBook.Add(int.Parse(Console.ReadLine()), temporaryProperties);
+                                addressBook.Add(Console.ReadLine(), temporaryProperties);
                                 break;
                             default:
                                 Console.WriteLine("\nTHAT CHOICE IS NOT AVAILABLE\n");
@@ -94,11 +95,11 @@ namespace AddressBook
 
                     //Delete a person from the address book
                     case 3:
-                        var numberForDelete = 0;
+                        var numberForDelete = "";
                         while (true)
                         {
                             Console.WriteLine("Input the number of the person you want to delete:");
-                            numberForDelete = int.Parse(Console.ReadLine());
+                            numberForDelete = RemoveWhitespace(Console.ReadLine());
                             if (addressBook.ContainsKey(numberForDelete))
                             {
                                 break;
@@ -119,7 +120,7 @@ namespace AddressBook
                     //Search by number
                     case 4:
                         Console.WriteLine("Input the number of the person you want to search:");
-                        var numberForSearch = int.Parse(Console.ReadLine());
+                        var numberForSearch = RemoveWhitespace(Console.ReadLine());
                         Console.WriteLine("Name: {0}\nLast name: {1}\nAddress: {2}\n", SearchByNumber(addressBook, numberForSearch).Item1, SearchByNumber(addressBook, numberForSearch).Item2, SearchByNumber(addressBook, numberForSearch).Item3);
                         break;
 
@@ -151,7 +152,7 @@ namespace AddressBook
             PrintSorted(addressBook);
         }
 
-        static void PrintAddressBook(Dictionary<int, Tuple<string, string, string>> addressBook)
+        static void PrintAddressBook(Dictionary<string, Tuple<string, string, string>> addressBook)
         {
             var i = 1;
             foreach (var person in addressBook)
@@ -164,14 +165,14 @@ namespace AddressBook
                 i++;
             }
         }
-        static Tuple<string, string, string> SearchByNumber(Dictionary<int, Tuple<string, string, string>> addressBook, int number)
+        static Tuple<string, string, string> SearchByNumber(Dictionary<string, Tuple<string, string, string>> addressBook, string number)
         {
             if (addressBook.ContainsKey(number))
                 return addressBook[number];
             Console.WriteLine("\nThe number you have entered is not located in the address book!\n");
             return null;
         }
-        static Tuple<int, string> SearchByName(Dictionary<int, Tuple<string, string, string>> addressBook, string name, string lastName)
+        static Tuple<string, string> SearchByName(Dictionary<string, Tuple<string, string, string>> addressBook, string name, string lastName)
         {
             foreach (var person in addressBook)
             {
@@ -182,9 +183,9 @@ namespace AddressBook
             return null;
         }
 
-        static void PrintSorted(Dictionary<int, Tuple<string, string, string>> addressBook)
+        static void PrintSorted(Dictionary<string, Tuple<string, string, string>> addressBook)
         {
-            var listNames = new List<Tuple<string, string, int, string>>();
+            var listNames = new List<Tuple<string, string, string, string>>();
 
             foreach (var person in addressBook)
             {
@@ -195,11 +196,23 @@ namespace AddressBook
 
             foreach (var key in listNames)
             {
-                Console.WriteLine("Name: {0}", key.Item2);
+                Console.WriteLine("\nName: {0}", key.Item2);
                 Console.WriteLine("Last name: {0}", key.Item1);
                 Console.WriteLine("Address: {0}", key.Item4);
-                Console.WriteLine("Number: {0}", key.Item3);
+                Console.WriteLine("Number: {0}\n", key.Item3);
             }
+        }
+
+        static string RemoveWhitespace(string toRemove)
+        {
+            var newString = "";
+            foreach (var character in toRemove)
+            {
+                if (character.Equals(' '));
+                else
+                    newString += character;
+            }
+            return newString;
         }
     }
 }
