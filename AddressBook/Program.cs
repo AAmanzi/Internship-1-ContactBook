@@ -9,7 +9,7 @@ namespace AddressBook
         static void Main(string[] args)
         {
             var addressBook = new Dictionary<string, Tuple<string, string, string>>(); //Key = number; Value = (Item1 = name, Item2 = lastName, Item3 = address)
-            var choice = 0;
+            var choice = "";
             do
             {
                 Console.WriteLine("1) Add a new person to the address book");
@@ -19,13 +19,14 @@ namespace AddressBook
                 Console.WriteLine("5) Search by name");
                 Console.WriteLine("6) Exit application");
 
-                choice = int.Parse(Console.ReadLine());
+                choice = RemoveWhitespace(Console.ReadLine());
 
                 switch (choice)
                 {
                     //add new person
-                    case 1:
+                    case "1":
                         //Add input checks
+                        var confirmationExit = "";
                         Console.WriteLine("Name:");
                         var newName = (Console.ReadLine());
                         Console.WriteLine("Last name:");
@@ -39,11 +40,27 @@ namespace AddressBook
                             newNumber = RemoveWhitespace(Console.ReadLine());
                             if (addressBook.Keys.Contains(newNumber))
                             {
-                                Console.WriteLine("\nThat number is already in our address book, please input a valid one\n");
+                                
+                                Console.WriteLine("\nThat number is already in our address book!\n");
+                                
+                                do
+                                {
+                                    Console.WriteLine("1) Input a new number");
+                                    Console.WriteLine("2) Exit adding a new person");
+                                    confirmationExit = RemoveWhitespace(Console.ReadLine());
+
+                                    if (confirmationExit != "1" && confirmationExit != "2")
+                                        Console.WriteLine("\nTHAT CHOICE IS NOT AVAILABLE\n");
+                                }
+                                while (confirmationExit != "1" && confirmationExit != "2");
+                                if (confirmationExit == "2")
+                                    break;
                             }
                             else
                                 break;
                         }
+                        if (confirmationExit == "2")
+                            break;
                         Console.WriteLine("Confirm your number:");
                         var confirmNumberAdd = RemoveWhitespace(Console.ReadLine());
                         
@@ -54,7 +71,7 @@ namespace AddressBook
                         break;
 
                     //edit person properties
-                    case 2:
+                    case "2":
                         var numberForChange = "";
 
                         Console.WriteLine("Input the number of the person you want to update:");
@@ -69,21 +86,21 @@ namespace AddressBook
                         Console.WriteLine("\t2) Change address");
                         Console.WriteLine("\t3) Change number");
 
-                        var choiceChange = int.Parse(Console.ReadLine());
+                        var choiceChange = RemoveWhitespace(Console.ReadLine());
 
                         switch (choiceChange)
                         {
-                            case 1: //change name (addressBook.Key = numberForChange)
+                            case "1": //change name (addressBook.Key = numberForChange)
                                 Console.WriteLine("New name:");
                                 addressBook[numberForChange] = (Console.ReadLine(), addressBook[numberForChange].Item2, addressBook[numberForChange].Item3).ToTuple();
                                 Console.WriteLine("New last name:");
                                 addressBook[numberForChange] = (addressBook[numberForChange].Item1, Console.ReadLine(), addressBook[numberForChange].Item3).ToTuple();
                                 break;
-                            case 2: //change address
+                            case "2": //change address
                                 Console.WriteLine("New address:");
                                 addressBook[numberForChange] = (addressBook[numberForChange].Item1, addressBook[numberForChange].Item2, Console.ReadLine()).ToTuple();
                                 break;
-                            case 3: //change number
+                            case "3": //change number
                                 Console.WriteLine("Please confirm the number you want to change:");
                                 var confirmNumberChange = RemoveWhitespace(Console.ReadLine());
                                 if (!confirmNumberChange.Equals(numberForChange))
@@ -92,20 +109,44 @@ namespace AddressBook
                                     break;
                                 }
                                 var temporaryProperties = (addressBook[numberForChange].Item1, addressBook[numberForChange].Item2, addressBook[numberForChange].Item3).ToTuple();
-                                addressBook.Remove(numberForChange);
-                                
+
+                                var confirmationExitEdit = "";
                                 while (true)
                                 {
-                                    Console.WriteLine("Enter new number:");
-                                    newNumber = RemoveWhitespace(Console.ReadLine());
+                                    while(true)
+                                    {
+                                        Console.WriteLine("Enter new number:");
+                                        newNumber = RemoveWhitespace(Console.ReadLine());
+                                        if (newNumber.Equals(numberForChange))
+                                            Console.WriteLine("\nYou cannot change your number with the same one!\n");
+                                        else
+                                            break;
+                                    }
+                                    
                                     if (addressBook.Keys.Contains(newNumber))
                                     {
-                                        Console.WriteLine("\nThat number is already in our address book, please input a valid one\n");
+                                        Console.WriteLine("\nThat number is already in our address book!\n");
+                                        do
+                                        {
+                                            Console.WriteLine("1) Enter a new number");
+                                            Console.WriteLine("2) Exit changing the number");
+                                            confirmationExitEdit = RemoveWhitespace(Console.ReadLine());
+
+                                            if (confirmationExitEdit != "1" && confirmationExitEdit != "2")
+                                                Console.WriteLine("\nTHAT CHOICE IS NOT AVAILABLE\n");
+                                        }
+                                        while (confirmationExitEdit != "1" && confirmationExitEdit != "2");
+                                        if (confirmationExitEdit == "2")
+                                            break;
                                     }
                                     else
+                                    {
                                         break;
+                                    }
                                 }
-
+                                if (confirmationExitEdit == "2")
+                                    break;
+                                addressBook.Remove(numberForChange);
                                 addressBook.Add(newNumber, temporaryProperties);
                                 break;
                             default:
@@ -115,7 +156,7 @@ namespace AddressBook
                         break;
 
                     //Delete a person from the address book
-                    case 3:
+                    case "3":
                         var numberForDelete = "";
                         var confirmation = 0;
 
@@ -146,7 +187,7 @@ namespace AddressBook
                         break;
 
                     //Search by number
-                    case 4:
+                    case "4":
                         Console.WriteLine("Input the number of the person you want to search:");
                         var numberForSearch = RemoveWhitespace(Console.ReadLine());
                         if (SearchByNumber(addressBook, numberForSearch) == null)
@@ -155,7 +196,7 @@ namespace AddressBook
                         break;
 
                     //search by name
-                    case 5:
+                    case "5":
                         Console.WriteLine("Input the NAME of the person you want to search:");
                         var nameForSearch = Console.ReadLine();
                         Console.WriteLine("Input the LAST NAME of the person you want to search:");
@@ -166,11 +207,11 @@ namespace AddressBook
                         break;
                     
                     //exit
-                    case 6:
+                    case "6":
                         break;
                     
                     //print address book
-                    case 0:
+                    case "0":
                         PrintAddressBook(addressBook);
                         break;
                     default:
@@ -178,7 +219,7 @@ namespace AddressBook
                         break;
                 }
             }
-            while (choice != 6);
+            while (choice != "6");
 
             //print in alphabetic order
             PrintSorted(addressBook);
