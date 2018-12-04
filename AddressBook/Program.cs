@@ -47,15 +47,14 @@ namespace AddressBook
                     case 2:
                         var numberForChange = "";
 
-                        while(true)
+                        Console.WriteLine("Input the number of the person you want to update:");
+                        numberForChange = RemoveWhitespace(Console.ReadLine());
+                        if (!addressBook.ContainsKey(numberForChange))
                         {
-                            Console.WriteLine("Input the number of the person you want to update:");
-                            numberForChange = RemoveWhitespace(Console.ReadLine());
-                            if (addressBook.ContainsKey(numberForChange))
-                                break;
-                            Console.WriteLine("We cannot find the number you have entered in the address book!");
-                        }
-                        
+                            Console.WriteLine("\nWe cannot find the number you have entered in the address book!\n");
+                            break;
+                        }   
+
                         Console.WriteLine("\t1) Change name");
                         Console.WriteLine("\t2) Change address");
                         Console.WriteLine("\t3) Change number");
@@ -96,31 +95,40 @@ namespace AddressBook
                     //Delete a person from the address book
                     case 3:
                         var numberForDelete = "";
-                        while (true)
-                        {
-                            Console.WriteLine("Input the number of the person you want to delete:");
-                            numberForDelete = RemoveWhitespace(Console.ReadLine());
-                            if (addressBook.ContainsKey(numberForDelete))
-                            {
-                                break;
-                            }
-                            Console.WriteLine("We cannot find the number you have entered in the address book!");
-                        }
-                        Console.WriteLine("Are you sure you want to delete this person from the address book?");
-                        Console.WriteLine("1) Yes");
-                        Console.WriteLine("2) No");
+                        var confirmation = 0;
 
-                        if (int.Parse(Console.ReadLine()) == 1)
+                        Console.WriteLine("Input the number of the person you want to update:");
+                        numberForChange = RemoveWhitespace(Console.ReadLine());
+                        if (!addressBook.ContainsKey(numberForChange))
                         {
-                            Console.WriteLine("{0} has been deleted!\n", addressBook[numberForDelete].Item1);
-                            addressBook.Remove(numberForDelete);
+                            Console.WriteLine("\nWe cannot find the number you have entered in the address book!\n");
+                            break;
                         }
+                        do
+                        {
+                            Console.WriteLine("Are you sure you want to delete this person from the address book?");
+                            Console.WriteLine("1) Yes");
+                            Console.WriteLine("2) No");
+
+                            confirmation = int.Parse(Console.ReadLine());
+                            if (confirmation == 1)
+                            {
+                                Console.WriteLine("{0} has been deleted!\n", addressBook[numberForDelete].Item1);
+                                addressBook.Remove(numberForDelete);
+                            }
+                            else if (confirmation != 2)
+                                Console.WriteLine("\nTHAT CHOICE IS NOT AVAILABLE\n");
+                        }
+                        while (confirmation == 1 || confirmation == 2);
+
                         break;
 
                     //Search by number
                     case 4:
                         Console.WriteLine("Input the number of the person you want to search:");
                         var numberForSearch = RemoveWhitespace(Console.ReadLine());
+                        if (SearchByNumber(addressBook, numberForSearch) == null)
+                            break;
                         Console.WriteLine("Name: {0}\nLast name: {1}\nAddress: {2}\n", SearchByNumber(addressBook, numberForSearch).Item1, SearchByNumber(addressBook, numberForSearch).Item2, SearchByNumber(addressBook, numberForSearch).Item3);
                         break;
 
@@ -130,6 +138,8 @@ namespace AddressBook
                         var nameForSearch = Console.ReadLine();
                         Console.WriteLine("Input the LAST NAME of the person you want to search:");
                         var lastNameForSearch = Console.ReadLine();
+                        if (SearchByName(addressBook, nameForSearch, lastNameForSearch) == null)
+                            break;
                         Console.WriteLine("Number: {0}\nAddress: {2}\n", SearchByName(addressBook, nameForSearch, lastNameForSearch).Item1, SearchByName(addressBook, nameForSearch, lastNameForSearch).Item2);
                         break;
                     
