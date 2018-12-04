@@ -32,8 +32,18 @@ namespace AddressBook
                         var newLastName = (Console.ReadLine());
                         Console.WriteLine("Address:");
                         var newAddress = (Console.ReadLine());
-                        Console.WriteLine("Number:");
-                        var newNumber = RemoveWhitespace(Console.ReadLine());
+                        var newNumber = "";
+                        while (true)
+                        {
+                            Console.WriteLine("Number:");
+                            newNumber = RemoveWhitespace(Console.ReadLine());
+                            if (addressBook.Keys.Contains(newNumber))
+                            {
+                                Console.WriteLine("\nThat number is already in our address book, please input a valid one\n");
+                            }
+                            else
+                                break;
+                        }
                         Console.WriteLine("Confirm your number:");
                         var confirmNumberAdd = RemoveWhitespace(Console.ReadLine());
                         
@@ -83,8 +93,20 @@ namespace AddressBook
                                 }
                                 var temporaryProperties = (addressBook[numberForChange].Item1, addressBook[numberForChange].Item2, addressBook[numberForChange].Item3).ToTuple();
                                 addressBook.Remove(numberForChange);
-                                Console.WriteLine("Enter new number:");
-                                addressBook.Add(Console.ReadLine(), temporaryProperties);
+                                
+                                while (true)
+                                {
+                                    Console.WriteLine("Enter new number:");
+                                    newNumber = RemoveWhitespace(Console.ReadLine());
+                                    if (addressBook.Keys.Contains(newNumber))
+                                    {
+                                        Console.WriteLine("\nThat number is already in our address book, please input a valid one\n");
+                                    }
+                                    else
+                                        break;
+                                }
+
+                                addressBook.Add(newNumber, temporaryProperties);
                                 break;
                             default:
                                 Console.WriteLine("\nTHAT CHOICE IS NOT AVAILABLE\n");
