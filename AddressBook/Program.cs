@@ -160,9 +160,9 @@ namespace AddressBook
                         var numberForDelete = "";
                         var confirmation = 0;
 
-                        Console.WriteLine("Input the number of the person you want to update:");
-                        numberForChange = RemoveWhitespace(Console.ReadLine());
-                        if (!addressBook.ContainsKey(numberForChange))
+                        Console.WriteLine("Input the number of the person you want to delete:");
+                        numberForDelete = RemoveWhitespace(Console.ReadLine());
+                        if (!addressBook.ContainsKey(numberForDelete))
                         {
                             Console.WriteLine("\nWe cannot find the number you have entered in the address book!\n");
                             break;
@@ -178,11 +178,12 @@ namespace AddressBook
                             {
                                 Console.WriteLine("{0} has been deleted!\n", addressBook[numberForDelete].Item1);
                                 addressBook.Remove(numberForDelete);
+
                             }
                             else if (confirmation != 2)
                                 Console.WriteLine("\nTHAT CHOICE IS NOT AVAILABLE\n");
                         }
-                        while (confirmation == 1 || confirmation == 2);
+                        while (confirmation != 1 && confirmation != 2);
 
                         break;
 
@@ -190,9 +191,18 @@ namespace AddressBook
                     case "4":
                         Console.WriteLine("Input the number of the person you want to search:");
                         var numberForSearch = RemoveWhitespace(Console.ReadLine());
+
+                        /*
                         if (SearchByNumber(addressBook, numberForSearch) == null)
                             break;
                         Console.WriteLine("Name: {0}\nLast name: {1}\nAddress: {2}\n", SearchByNumber(addressBook, numberForSearch).Item1, SearchByNumber(addressBook, numberForSearch).Item2, SearchByNumber(addressBook, numberForSearch).Item3);
+                        */
+
+                        var numberFound = SearchByNumber(addressBook, numberForSearch);
+                        if (numberFound == null)
+                            break;
+                        Console.WriteLine("Name: {0}\nLast name: {1}\nAddress: {2}\n", numberFound.Item1, numberFound.Item2, numberFound.Item3);
+
                         break;
 
                     //search by name
@@ -201,9 +211,18 @@ namespace AddressBook
                         var nameForSearch = Console.ReadLine();
                         Console.WriteLine("Input the LAST NAME of the person you want to search:");
                         var lastNameForSearch = Console.ReadLine();
+
+                        /*
                         if (SearchByName(addressBook, nameForSearch, lastNameForSearch) == null)
                             break;
                         Console.WriteLine("Number: {0}\nAddress: {2}\n", SearchByName(addressBook, nameForSearch, lastNameForSearch).Item1, SearchByName(addressBook, nameForSearch, lastNameForSearch).Item2);
+                        */
+
+                        var nameFound = SearchByName(addressBook, nameForSearch, lastNameForSearch);
+                        if (nameFound == null)
+                            break;
+                        Console.WriteLine("Number: {0}\nAddress: {2}\n", nameFound.Item1, nameFound.Item2);
+
                         break;
                     
                     //exit
@@ -278,6 +297,7 @@ namespace AddressBook
 
         static string RemoveWhitespace(string toRemove)
         {
+            /*
             var newString = "";
             foreach (var character in toRemove)
             {
@@ -286,6 +306,9 @@ namespace AddressBook
                     newString += character;
             }
             return newString;
+            */
+            toRemove = toRemove.Replace(" ", "");
+            return toRemove;
         }
     }
 }
