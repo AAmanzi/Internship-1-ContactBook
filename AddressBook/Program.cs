@@ -192,12 +192,6 @@ namespace AddressBook
                         Console.WriteLine("Input the number of the person you want to search:");
                         var numberForSearch = RemoveWhitespace(Console.ReadLine());
 
-                        /*
-                        if (SearchByNumber(addressBook, numberForSearch) == null)
-                            break;
-                        Console.WriteLine("Name: {0}\nLast name: {1}\nAddress: {2}\n", SearchByNumber(addressBook, numberForSearch).Item1, SearchByNumber(addressBook, numberForSearch).Item2, SearchByNumber(addressBook, numberForSearch).Item3);
-                        */
-
                         var numberFound = SearchByNumber(addressBook, numberForSearch);
                         if (numberFound == null)
                             break;
@@ -211,12 +205,6 @@ namespace AddressBook
                         var nameForSearch = Console.ReadLine();
                         Console.WriteLine("Input the LAST NAME of the person you want to search:");
                         var lastNameForSearch = Console.ReadLine();
-
-                        /*
-                        if (SearchByName(addressBook, nameForSearch, lastNameForSearch) == null)
-                            break;
-                        Console.WriteLine("Number: {0}\nAddress: {2}\n", SearchByName(addressBook, nameForSearch, lastNameForSearch).Item1, SearchByName(addressBook, nameForSearch, lastNameForSearch).Item2);
-                        */
 
                         var nameFound = SearchByName(addressBook, nameForSearch, lastNameForSearch);
                         if (nameFound == null)
@@ -297,16 +285,6 @@ namespace AddressBook
 
         static string RemoveWhitespace(string toRemove)
         {
-            /*
-            var newString = "";
-            foreach (var character in toRemove)
-            {
-                if (character.Equals(' '));
-                else
-                    newString += character;
-            }
-            return newString;
-            */
             toRemove = toRemove.Replace(" ", "");
             return toRemove;
         }
