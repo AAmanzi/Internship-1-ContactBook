@@ -201,15 +201,10 @@ namespace AddressBook
 
                     //search by name
                     case "5":
-                        Console.WriteLine("Input the NAME of the person you want to search:");
+                        Console.WriteLine("Input the name of the person you want to search:");
                         var nameForSearch = Console.ReadLine();
-                        Console.WriteLine("Input the LAST NAME of the person you want to search:");
-                        var lastNameForSearch = Console.ReadLine();
 
-                        var nameFound = SearchByName(addressBook, nameForSearch, lastNameForSearch);
-                        if (nameFound == null)
-                            break;
-                        Console.WriteLine("Number: {0}\nAddress: {2}\n", nameFound.Item1, nameFound.Item2);
+                        SearchByName(addressBook, nameForSearch);
 
                         break;
                     
@@ -252,15 +247,22 @@ namespace AddressBook
             Console.WriteLine("\nThe number you have entered is not located in the address book!\n");
             return null;
         }
-        static Tuple<string, string> SearchByName(Dictionary<string, Tuple<string, string, string>> addressBook, string name, string lastName)
+        static void SearchByName(Dictionary<string, Tuple<string, string, string>> addressBook, string name)
         {
+            var foundNames = 0;
             foreach (var person in addressBook)
             {
-                if (person.Value.Item1 == name && person.Value.Item2 == lastName)
-                    return (person.Key, person.Value.Item3).ToTuple();
+                if (person.Value.Item1.StartsWith(name) || person.Value.Item2.StartsWith(name))
+                {
+                    foundNames++;
+                    Console.WriteLine("Name: {0}", person.Value.Item1);
+                    Console.WriteLine("Last name: {0}", person.Value.Item2);
+                    Console.WriteLine("Address: {0}", person.Value.Item3);
+                    Console.WriteLine("Number: {0}", person.Key + "\n");
+                }
             }
-            Console.WriteLine("\nThe name you have entered is not located in the address book!\n");
-            return null;
+            if (foundNames == 0)
+                Console.WriteLine("\nNo people were found with the requested name in the address book!\n");
         }
 
         static void PrintSorted(Dictionary<string, Tuple<string, string, string>> addressBook)
